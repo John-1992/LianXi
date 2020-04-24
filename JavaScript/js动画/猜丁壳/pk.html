@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container {
+            width: 600px;
+            height: 450px;
+            border: rgb(216, 206, 206) solid 10px;
+            margin: 0 auto;
+        }
+
+        #container>div {
+            width: 300px;
+            height: 400px;
+            float: left;
+        }
+
+        #container>div>div {
+            width: 300px;
+            height: 300px;
+            background-size: 100% 100%;
+            background-image: url('./random.gif');
+        }
+
+        input {
+            border-radius: 10px;
+            height: 50px;
+            width: 90px;
+            background-color: lightblue;
+        }
+
+        #result {
+            font-weight: bolder;
+            font-size: 30px;
+            text-align: center;
+            color: rgb(41, 141, 228);
+            font-family: fantasy;
+        }
+
+        #retry {
+            border-radius: 10px;
+            height: 50px;
+            width: 200px;
+            background-color: lightblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="mine">
+
+            <h1 style="text-align: center;background-color: lightgreen;">我的出拳</h1>
+
+
+            <div id="mychoice">
+            </div>
+        </div>
+        <div id="computer">
+            <h1 style="text-align: center;background-color: lightslategray;">电脑出拳</h1>
+            <div id="computerchoice"></div>
+        </div>
+        <div style="height: 50px; background-color: bisque;">
+            <input type="button" value="石头" onclick="st()">
+            <input type="button" value="剪刀" onclick="jd()">
+            <input type="button" value="布" onclick="bu()">
+        </div>
+        <div id="result" style="height:50px;background-color: bisque;"></div>
+    </div>
+    <div id="scoretext" style="text-align: center;">当前积分：0</div>
+</body>
+
+</html>
+<script>
+    var score = 0;
+    var mychoice = document.getElementById('mychoice');
+    var computerchoice = document.getElementById('computerchoice');
+    var result = document.getElementById('result');
+    var scoretext = document.getElementById('scoretext');
+    var inputs = document.getElementsByTagName('input');
+
+    function checkPass(params) {
+        if (score < 2) {
+            scoretext.innerHTML = '当前积分:' + score;
+        } else {
+            for (const i of inputs) {
+                i.style.backgroundColor = 'lightgrey';
+                i.disabled = 'disabled';
+            }
+            result.innerHTML = '<button id="retry" onclick="replay()">再玩一次</button>'
+            scoretext.innerHTML = 'NB,您已通关！';
+            scoretext.style.backgroundColor = 'lightblue';
+            scoretext.style.color = 'yellow';
+        }
+    }
+
+    function computerChoice(params) {
+        var r = Math.ceil(3 * Math.random());
+        if (r == 1) {
+            computerchoice.style.backgroundImage = 'url("./st.jpg")';
+        } else if (r == 2) {
+            computerchoice.style.backgroundImage = 'url("./jd.jpg")';
+        } else {
+            computerchoice.style.backgroundImage = 'url("./bu.jpg")';
+        }
+        return r
+    }
+
+    function st(params) {
+        mychoice.style.backgroundImage = 'url("./st.jpg")';
+        r = computerChoice();
+
+        if (r == 1) {
+            result.innerHTML = '平局，就差一点';
+        } else if (r == 2) {
+            score += 1;
+            result.innerHTML = '恭喜，获胜！';
+        } else {
+            score -= 1;
+            result.innerHTML = '很遗憾，失败了！';
+        }
+        checkPass();
+    }
+
+    function jd(params) {
+        mychoice.style.backgroundImage = 'url("./jd.jpg")';
+        r = computerChoice();
+
+        if (r == 1) {
+            score -= 1;
+            result.innerHTML = '很遗憾，失败了！';
+        } else if (r == 2) {
+            result.innerHTML = '平局，再来一次';
+        } else {
+            score += 1;
+            result.innerHTML = '恭喜，获胜！';
+        }
+        checkPass();
+    }
+
+    function bu(params) {
+        mychoice.style.backgroundImage = 'url("./bu.jpg")';
+        r = computerChoice();
+
+        if (r == 1) {
+            score += 1;
+            result.innerHTML = '恭喜，获胜！';
+        } else if (r == 2) {
+            score -= 1;
+            result.innerHTML = '很遗憾，失败了！';
+        } else {
+            result.innerHTML = '平局，再来一次';
+        }
+        checkPass();
+    }
+
+    function replay(params) {
+        mychoice.style.backgroundImage = 'url("./random.gif")';
+        computerchoice.style.backgroundImage = 'url("./random.gif")';
+        for (const i of inputs) {
+            i.style.backgroundColor = 'lightblue';
+            i.disabled = '';
+        }
+        score = 0;
+        scoretext.innerHTML = '当前积分：0'
+        scoretext.style.backgroundColor = 'white';
+        scoretext.style.color = 'black';
+
+        var retry = document.getElementById('retry');
+        retry.remove();
+    }
+</script>
